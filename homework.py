@@ -12,13 +12,14 @@ class InfoMessage:
     speed: float
     calories: float
 
-    def get_message(self) -> str:
-        message_info = ('Тип тренировки: {training_type}; '
+    message_info = ('Тип тренировки: {training_type}; '
                         'Длительность: {duration:.3f} ч.; '
                         'Дистанция: {distance:.3f} км; '
                         'Ср. скорость: {speed:.3f} км/ч; '
                         'Потрачено ккал: {calories:.3f}.')
-        return message_info.format(**asdict(self))
+
+    def get_message(self) -> str:
+        return InfoMessage.message_info.format(**asdict(self))
 
 
 class Training:
@@ -135,14 +136,14 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: List[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_type: Dict[str, Type[Training]] = {
+    type_to_training: Dict[str, Type[Training]] = {
         'SWM': Swimming,
         'RUN': Running,
         'WLK': SportsWalking
     }
-    if workout_type not in training_type.keys():
+    if workout_type not in type_to_training:
         raise KeyError(f'Неизвестный тип тренировки {workout_type}')
-    return training_type[workout_type](*data)
+    return type_to_training[workout_type](*data)
 
 
 def main(training: Training) -> None:
